@@ -3,6 +3,7 @@ import codecs
 import re
 import shutil
 import os
+
 import split
 
 PAIRS_FILE_NAME = 'pairs.txt'
@@ -25,9 +26,12 @@ def copy_data(input_folder: str, output_folder: str):
 
     # collapse multiple spaces
     lines = [re.sub(' +', ' ', x) for x in lines]
+    # remove empty rows
+    lines = [x for x in lines if len(x.strip()) > 0]
 
     with codecs.open(os.path.join(output_folder, PAIRS_FILE_NAME), 'a', encoding='utf-8') as out_stream:
         out_stream.write('\n'.join(lines))
+        out_stream.write('\n')
 
 
 def main():

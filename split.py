@@ -13,8 +13,8 @@ def get_unique_values(items: List[str]):
 
 
 def split(filename: str, validation_ratio: float = 0.2):
-    with open(filename) as f:
-        lines = f.readlines()
+    with codecs.open(filename, 'r', encoding='utf-8') as f:
+        lines = f.read().splitlines(keepends=False)
 
     # label parts should be in uppercase
     alphabet = []
@@ -31,14 +31,13 @@ def split(filename: str, validation_ratio: float = 0.2):
     f_parts = filename.rsplit('.', 1)
 
     with codecs.open(f'{f_parts[0]}_train.{f_parts[1]}', 'w', encoding='utf-8') as f:
-        f.write(''.join(train))
+        f.write('\n'.join(train))
         print(f'Wrote train dataset to {f.name}')
 
     with codecs.open(f'{f_parts[0]}_val.{f_parts[1]}', 'w', encoding='utf-8') as f:
-        f.write(''.join(test))
+        f.write('\n'.join(test))
         print(f'Wrote validation dataset to {f.name}')
 
-    alphabet.remove('\n')
     alphabet.sort()
     print(f'Dictionary alphabet is: {alphabet}')
 
