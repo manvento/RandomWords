@@ -1,12 +1,13 @@
 import argparse
-import string
-from typing import List, Dict
-from random import random, randint, choice
-from random_words import RandomWords
 import math
+import string
+from random import random, randint, choice
+from typing import List, Dict
 
-SPECIAL_CHARS = [' ', '!', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '=', '?', '@', '[',
-                 '\\', ']', '©', '´', 'â', 'ã', '‰']
+from random_words import RandomWords
+
+SPECIAL_CHARS = ['', ' ', '!', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '=', '?', '@', '[',
+                 '\\', ']']
 
 
 def randomcase(s: str) -> str:
@@ -114,6 +115,8 @@ def get_random_numbers(count: int = 100, min_length=3, max_length=15,
             else:  # don't change anything
                 generated_words['no'] += 1
 
+            words[i] = words[i].strip()
+
     print(f"generated {len(words)} words. "
           f"{generated_words['no']} consisting in only digits, "
           f"{generated_words['before']} consisting in digits preceded by text, "
@@ -132,7 +135,7 @@ def main(filename: str, add_special_char: bool):
                                     min_length=3,
                                     max_length=20,
                                     max_text_length=5,
-                                    add_special_char= add_special_char,
+                                    add_special_char=add_special_char,
                                     with_text_dict={
                                         'no': 0.5,
                                         'after': 0.2,
