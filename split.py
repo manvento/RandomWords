@@ -1,6 +1,7 @@
 from sklearn.model_selection import train_test_split
 from typing import List
 import argparse
+import codecs
 
 
 def get_chars_in_text(text: str) -> List[str]:
@@ -29,12 +30,12 @@ def split(filename: str, validation_ratio: float = 0.2):
 
     f_parts = filename.rsplit('.', 1)
 
-    with open(f'{f_parts[0]}_train.{f_parts[1]}', 'w') as f:
-        f.writelines(train)
+    with codecs.open(f'{f_parts[0]}_train.{f_parts[1]}', 'w', encoding='utf-8') as f:
+        f.write(''.join(train))
         print(f'Wrote train dataset to {f.name}')
 
-    with open(f'{f_parts[0]}_val.{f_parts[1]}', 'w') as f:
-        f.writelines(test)
+    with codecs.open(f'{f_parts[0]}_val.{f_parts[1]}', 'w', encoding='utf-8') as f:
+        f.write(''.join(test))
         print(f'Wrote validation dataset to {f.name}')
 
     alphabet.remove('\n')
