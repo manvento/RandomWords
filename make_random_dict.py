@@ -1,8 +1,12 @@
+import argparse
 import string
 from typing import List, Dict
 from random import random, randint, choice
 from random_words import RandomWords
 import math
+
+SPECIAL_CHARS = [' ', '!', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '=', '?', '@', '[',
+                 '\\', ']', '©', '´', 'â', 'ã', '‰']
 
 
 def randomcase(s: str) -> str:
@@ -57,7 +61,7 @@ def get_random_words(count: int = 100, case_dict: Dict[str, float] = None) -> Li
 
 
 def get_random_numbers(count: int = 100, min_length=3, max_length=15,
-                       max_text_length=5,
+                       max_text_length=5, add_special_char: bool = False,
                        with_text_dict: Dict[str, float] = None) -> List[str]:
     """
     Return random words from lorem_ipsum.dat.
@@ -66,12 +70,12 @@ def get_random_numbers(count: int = 100, min_length=3, max_length=15,
     :param max_text_length: max text size (non digits). Valid if with_text_dict is not None.
     :param count: Number of words to return.
     :param with_text_dict: if setted allows to add text to numbers.
+    :param add_special_char: if true, adds a special character from the list.
     The dict contains the ratio for the changes. E.g.:
     { 'no': 0.5, 'after': 0.2, 'before': 0.2, 'inside': 0.1}
     means the 25% of words will be lowercase, 25% upper and 50% mixed.
     :return: a list of words.
     """
-    ch_list = ['.', '.', '.',  ',', ':', '=', ' ', '', '', '', '', '']
     max_num_length = max_length - max_text_length if with_text_dict else max_length
     words = []
     generated_words = {'no': 0, 'after': 0, 'before': 0, 'inside': 0}
@@ -91,8 +95,8 @@ def get_random_numbers(count: int = 100, min_length=3, max_length=15,
             after_ratio += inside_ratio
             r = random()
             text = ''.join(choice(string.ascii_letters) for _ in range(text_size))
-            sep1 = choice(ch_list)
-            sep2 = choice(ch_list)
+            sep1 = choice(SPECIAL_CHARS) if add_special_char else ''
+            sep2 = choice(SPECIAL_CHARS) if add_special_char else ''
 
             if r <= before_ratio:
                 generated_words['before'] += 1
@@ -118,7 +122,7 @@ def get_random_numbers(count: int = 100, min_length=3, max_length=15,
     return words
 
 
-def main():
+def main(filename: str, add_special_char: bool):
     words = get_random_words(count=5000, case_dict={
         'lower': 0.33,
         'upper': 0.33,
@@ -128,6 +132,7 @@ def main():
                                     min_length=3,
                                     max_length=20,
                                     max_text_length=5,
+                                    add_special_char= add_special_char,
                                     with_text_dict={
                                         'no': 0.5,
                                         'after': 0.2,
@@ -136,11 +141,17 @@ def main():
                                     }))
     words.sort(key=len)
     # print dictionary to file
-    with open('corpus.txt', 'w') as f:
+    with open(filename, 'w') as f:
         for w in words:
             f.write(w)
             f.write('\n')
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Makes a random dictionary.')
+    parser.add_argument('filename', type=str, help='output file')
+    parser.add_argument('--special-characters', '-s', action='store_true',
+                        help='if set, adds special characters')
+
+    args = parser.parse_args()
+    main(args.filename, args.special_characters)

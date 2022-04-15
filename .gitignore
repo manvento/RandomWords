@@ -30,3 +30,6 @@ lib/
 include/
 bin/
 local/
+
+.idea/**
+corpus.txt
