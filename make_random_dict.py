@@ -6,8 +6,7 @@ from typing import List, Dict
 
 from random_words import RandomWords
 
-SPECIAL_CHARS = ['', ' ', '!', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '=', '?', '@', '[',
-                 '\\', ']']
+SPECIAL_CHARS = [' ', '+', '-', '.', ':', '=', ',', ';']
 
 
 def randomcase(s: str) -> str:
