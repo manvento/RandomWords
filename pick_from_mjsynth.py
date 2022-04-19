@@ -1,17 +1,14 @@
 import argparse
-import math
 import os
 import shutil
 import string
-from random import random, randint, choice, shuffle
-from typing import List, Dict
-
-from random_words import RandomWords
+from random import shuffle
+from typing import List, Dict, Union
 
 SPECIAL_CHARS = [' ', '+', '-', '.', ':', '=', ',', ';']
 
 
-def pick_rows(filename: str, rows: int) -> List[Dict[str, str]]:
+def pick_rows(filename: str, rows: int) -> List[Dict[str, Union[str, int]]]:
     """
     Opens the file and picks randomly a number rows.
     :param filename: mjsynth input file
@@ -28,6 +25,7 @@ def pick_rows(filename: str, rows: int) -> List[Dict[str, str]]:
         lines = f.readlines()
 
     shuffle(lines)
+    i = 0
 
     for line in lines:
         if len(result) >= rows:
@@ -46,31 +44,34 @@ def pick_rows(filename: str, rows: int) -> List[Dict[str, str]]:
             print(f'Non compliant characters are: {extra_alphabet_chars}')
         else:
             result.append({
+                'id': i,
                 'path': path,
                 'name': name,
                 'text': text
             })
+            i += 1
 
     return result
 
 
-def copy_images(records: List[Dict[str, str]], output_path: str):
+def copy_images(records: List[Dict[str, Union[str, int]]], output_path: str):
     output_path = os.path.join(output_path, 'images')
     os.makedirs(output_path)
 
     for record in records:
         src_image = os.path.join(record['path'], record['name'])
+        target_image = os.path.join(output_path, f"img_{record.get('id'):06}.jpg")
         assert os.path.exists(src_image) and os.path.isfile(src_image), \
-            f'{src_image} does not exist or is not a file'
-        shutil.copy2(src_image, os.path.join(output_path, record['name']))
+            f'{src_image} does not exist or is not a file.\nRecord: {record}'
+        shutil.copy2(src_image, target_image)
 
 
-def save_pairs(records: List[Dict[str, str]], output_path: str):
+def save_pairs(records: List[Dict[str, Union[str, int]]], output_path: str):
     filename = os.path.join(output_path, 'pairs.txt')
     with open(filename, 'w', newline='') as f:
         for record in records:
             f.write('#REPLACE_WITH_PATH#')
-            f.write(record.get('name'))
+            f.write(f"img_{record.get('id', -1):06}.jpg")
             f.write('\t')
             f.write(record.get('text'))
             f.write('\n')
