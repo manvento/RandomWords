@@ -6,7 +6,7 @@ from typing import List, Dict
 
 from random_words import RandomWords
 
-SPECIAL_CHARS = [' ', '+', '-', '.', ':', '=', ',', ';']
+SPECIAL_CHARS = [' ', '+', '-', '.', ':', '=', ',', ';', '.', '.', '.', ',', ',', ',']
 
 
 def randomcase(s: str) -> str:
@@ -136,10 +136,10 @@ def main(filename: str, add_special_char: bool):
                                     max_text_length=5,
                                     add_special_char=add_special_char,
                                     with_text_dict={
-                                        'no': 0.5,
-                                        'after': 0.2,
-                                        'before': 0.2,
-                                        'inside': 0.1
+                                        'no': 0.1,
+                                        'after': 0.3,
+                                        'before': 0.3,
+                                        'inside': 0.3
                                     }))
     words.sort(key=len)
     # print dictionary to file
