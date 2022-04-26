@@ -124,13 +124,14 @@ def get_random_numbers(count: int = 100, min_length=3, max_length=15,
     return words
 
 
-def main(filename: str, add_special_char: bool):
-    words = get_random_words(count=5000, case_dict={
+def main(filename: str, words_number: int, add_special_char: bool):
+    n = int(words_number / 2)
+    words = get_random_words(count=n, case_dict={
         'lower': 0.33,
         'upper': 0.33,
         'mixed': 0.34
     })
-    words.extend(get_random_numbers(count=5000,
+    words.extend(get_random_numbers(count=n,
                                     min_length=3,
                                     max_length=20,
                                     max_text_length=5,
@@ -152,8 +153,12 @@ def main(filename: str, add_special_char: bool):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Makes a random dictionary.')
     parser.add_argument('filename', type=str, help='output file')
+    parser.add_argument('--words', '-w', type=int, help='number of words to generate (divisible by two)', default=10000)
     parser.add_argument('--special-characters', '-s', action='store_true',
                         help='if set, adds special characters')
 
     args = parser.parse_args()
-    main(args.filename, args.special_characters)
+
+    assert args.words % 2 == 0, "Words number should be divisible by two"
+
+    main(args.filename, args.words, args.special_characters)

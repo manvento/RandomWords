@@ -32,4 +32,4 @@ bin/
 local/
 
 .idea/**
-corpus.txt
+dictionaries_tools/corpus.txt
